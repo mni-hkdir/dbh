@@ -23,6 +23,7 @@ Consists of three R scripts
 
 ### Running the tests
 It is necessary to run all R scripts.
+For token users it necessary to get token before start using function dbh_api_token(brukernavn, passord)
 
 * Get R data frame from bulk data 
 
