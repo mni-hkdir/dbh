@@ -1,11 +1,11 @@
-## Håndterer token-innlogging ----
+## Token login inn ----
 
-# Globale variabler for nåværende token og utløpstid
-dbh_api_token_utløpstid <- Sys.time()
-dbh_api_token_innhold <- ""
+# Global variables for current token and expiration time
+dbh_api_token_expiration <- Sys.time()
+dbh_api_token_contents <- ""
 
-# Henter nytt token
-#' Title
+# Retrieving new token
+
 #'
 #' @param brukernavn 
 #' @param passord 
@@ -14,7 +14,7 @@ dbh_api_token_innhold <- ""
 #' @export
 #'
 #' @examples
-dbh_api_token_hent_nytt <- function(brukernavn, passord) {
+dbh_api_token_get_new <- function(brukernavn, passord) {
   res <- 
     httr::POST(url = "https://sso.nsd.no/oauth/token",
       httr::authenticate(user = brukernavn,
@@ -27,9 +27,8 @@ dbh_api_token_hent_nytt <- function(brukernavn, passord) {
 }
 
 
-# Returnerer nåværende token fra global variabel, eller henter nytt token hvis
-# utløpt
-#' Title
+# Returns current token using golobal variable variable, or retrieves new token if expired
+
 #'
 #' @param brukernavn 
 #' @param passord 
@@ -40,15 +39,15 @@ dbh_api_token_hent_nytt <- function(brukernavn, passord) {
 #' @examples
 dbh_api_token <- function(brukernavn="", passord="" ){
   t <- Sys.time()
-  if (t >= dbh_api_token_utløpstid) {
+  if (t >= dbh_api_token_expiration) {
     purrr::walk2(
       stringr::str_c("dbh_api_token_",
         c("utløpstid", "innhold")),
       list(t + 3600,
-        dbh_api_token_hent_nytt(brukernavn, passord)),
+        dbh_api_token_get_new(brukernavn, passord)),
       assign,
       env = .GlobalEnv
     )
   }
-  return(dbh_api_token_innhold)
+  return(dbh_api_token_contents)
 }
