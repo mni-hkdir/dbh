@@ -42,7 +42,7 @@ dbh_api_token <- function(brukernavn="", passord="" ){
   if (t >= dbh_api_token_expiration) {
     purrr::walk2(
       stringr::str_c("dbh_api_token_",
-        c("utløpstid", "innhold")),
+        c("expiration", "contents")),
       list(t + 3600,
         dbh_api_token_get_new(brukernavn, passord)),
       assign,
